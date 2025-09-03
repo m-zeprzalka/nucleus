@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 
 export function Tags() {
   const tags = [
+    "Wszystkie",
     "Historia",
     "Medycyna",
     "Technologia",
@@ -25,8 +26,8 @@ export function Tags() {
       {tags.map((tag) => (
         <Badge
           key={tag}
-          variant={selected.includes(tag) ? "default" : "secondary"}
-          className="cursor-pointer px-4 py-2"
+          variant={selected.includes(tag) ? "default" : "outline"}
+          className="cursor-pointer px-4 py-2 rounded-full"
           onClick={() => toggleTag(tag)}
         >
           {tag}
