@@ -71,13 +71,19 @@ async function fetchRandomHistoricalArticles(
     }&format=json`
     console.log(`Fetching from: ${url}`)
 
-    const response = await fetchJSON<any>(url)
+    const response = await fetchJSON<{
+      query?: {
+        querypage?: {
+          results?: Array<{ ns: number; title: string }>
+        }
+      }
+    }>(url)
     const results = response.query?.querypage?.results || []
 
     // Filtruj tylko rzeczywiste artykuły (namespace 0) i zwróć tytuły
     const historicallyImportant = results
-      .filter((result: any) => result.ns === 0 && isRealArticle(result.title))
-      .map((result: any) => result.title)
+      .filter((result) => result.ns === 0 && isRealArticle(result.title))
+      .map((result) => result.title)
       .slice(0, limit * 2) // Więcej niż potrzeba żeby mieć z czego losować
 
     console.log(

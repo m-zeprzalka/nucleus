@@ -90,7 +90,7 @@ export default function Home() {
 
     observer.observe(sentinelRef.current)
     return () => observer.disconnect()
-  }, [offset, loadingMore, hasMore, fetchPage])
+  }, [offset, loadingMore, hasMore, fetchPage, items.length])
 
   return (
     <div>

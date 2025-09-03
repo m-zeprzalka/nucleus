@@ -126,7 +126,7 @@ async function fetchCategoriesByTitles(
           c.title.replace(/^Kategoria:/, "").replace(/^Category:/, "")
         )
         .filter((c) => c.length < 30)
-      map.set(titles.find((t) => t === (page as any).title)!, cats)
+      map.set(titles.find((t) => t === (page as { title: string }).title)!, cats)
     }
   }
   return map
@@ -222,18 +222,6 @@ function encodeAllCursor(
   return `all:${Buffer.from(JSON.stringify(payload), "utf-8").toString(
     "base64"
   )}`
-}
-function decodeAllCursor(
-  cursor?: string
-): { i: number; c?: string; s?: number } | undefined {
-  if (!cursor?.startsWith("all:")) return undefined
-  try {
-    const obj = JSON.parse(
-      Buffer.from(cursor.slice(4), "base64").toString("utf-8")
-    )
-    if (typeof obj.i === "number") return obj
-  } catch {}
-  return undefined
 }
 
 // =========================================================================

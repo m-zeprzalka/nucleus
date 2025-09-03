@@ -102,7 +102,7 @@ async function fetchCategoriesByTitles(
         )
         .filter((c) => c.length < 30)
         .slice(0, 3) // Max 3 kategorie
-      map.set(titles.find((t) => t === (page as any).title)!, cats)
+      map.set(titles.find((t) => t === (page as { title: string }).title)!, cats)
     }
   }
   return map
