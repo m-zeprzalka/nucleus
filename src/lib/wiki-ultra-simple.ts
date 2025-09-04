@@ -17,7 +17,7 @@ let popularArticles: string[] = []
 let cacheTime = 0
 
 // Konfiguracja agregacji
-const AGGREGATION_DAYS = 900 // Zwiększamy z 30 do 90 dni dla lepszego obrazu historycznego
+const AGGREGATION_DAYS = 90 // 90 dni (3 miesiące) - optymalne dla wydajności i jakości
 const CACHE_DURATION = 1800000 // 30 minut cache (dłużej bo więcej danych)
 const TOP_ARTICLES_LIMIT = 1000 // Zwiększamy limit do 1000
 
@@ -58,16 +58,18 @@ export async function fetchPopularArticles(
       // Agreguj wyniki - sumuj odwiedziny każdego artykułu
       results.forEach((data) => {
         if (data?.items?.[0]?.articles) {
-          data.items[0].articles.forEach((article: any) => {
-            if (
-              !article.article.includes(":") &&
-              article.article !== "Wikipedia:Strona_główna" &&
-              article.article !== "Specjalna:Szukaj"
-            ) {
-              articlesViews[article.article] =
-                (articlesViews[article.article] || 0) + article.views
+          data.items[0].articles.forEach(
+            (article: { article: string; views: number }) => {
+              if (
+                !article.article.includes(":") &&
+                article.article !== "Wikipedia:Strona_główna" &&
+                article.article !== "Specjalna:Szukaj"
+              ) {
+                articlesViews[article.article] =
+                  (articlesViews[article.article] || 0) + article.views
+              }
             }
-          })
+          )
         }
       })
 
@@ -106,7 +108,9 @@ export async function fetchPopularArticles(
           const pages = categoriesData.query?.pages
           const pageId = Object.keys(pages || {})[0]
           const categories = pages?.[pageId]?.categories
-            ?.map((cat: any) => cat.title.replace("Kategoria:", ""))
+            ?.map((cat: { title: string }) =>
+              cat.title.replace("Kategoria:", "")
+            )
             ?.slice(0, 3) || ["Historia", "Kultura"]
 
           return {
